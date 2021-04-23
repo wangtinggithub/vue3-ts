@@ -1,16 +1,37 @@
 <template>
  <p>{{msg}}</p>
+ <ul>
+  <li v-for="(item,index) in first" :key="index">{{item.name}}</li>
+ </ul>
 </template>
 
 <script>
-
+ import axios from "axios";
+ import { reactive, onMounted,toRefs} from 'vue'
 export default {
   name: 'App',
-  data(){
-    return{
-      msg:'你好 vue'
-    }
+  setup(){
+   const state=reactive({
+    msg:'这是一个测试daia',
+    first:[]
+
+   })
+   onMounted(async ()=>{
+     let data=await axios.get('/list.json').then(response => {
+     return response.data
+    }, error => {
+     console.log(error);
+    });
+     state.first=data.first
+
+   })
+
+   return {
+    ...toRefs(state)
+   }
   }
+
+
 }
 </script>
 
